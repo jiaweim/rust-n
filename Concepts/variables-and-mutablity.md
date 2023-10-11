@@ -1,15 +1,15 @@
 # 变量和可变性
 
 - [变量和可变性](#变量和可变性)
-  - [简介](#简介)
-  - [Constants](#constants)
-  - [变量掩蔽](#变量掩蔽)
+  - [1. 简介](#1-简介)
+  - [2. Constants](#2-constants)
+  - [3. 变量掩蔽](#3-变量掩蔽)
 
 Last updated: 2023-10-09, 20:19
 @author Jiawei Mao
 ****
 
-## 简介
+## 1. 简介
 
 Rust 中变量默认不可变（immutable），这是 Rust 实现高效并发的基础。
 
@@ -35,7 +35,7 @@ fn main() {
 }
 ```
 
-## Constants
+## 2. Constants
 
 和 immutable 变量一样，constant 也不能更改，但两者之间有一些区别。
 
@@ -47,7 +47,7 @@ fn main() {
 const THREE_HOURS_IN_SECONDS: u32 = 60 * 60 * 3;
 ```
 
-## 变量掩蔽
+## 3. 变量掩蔽
 
 在 Rust 中可以声明一个与之前变量同名的新变量。称第一个变量被第二个变量掩蔽（shadow）。例如：
 

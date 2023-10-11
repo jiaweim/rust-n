@@ -1,16 +1,16 @@
 # Rust 函数
 
 - [Rust 函数](#rust-函数)
-  - [简介](#简介)
-  - [参数](#参数)
-  - [Statements and Expressions](#statements-and-expressions)
-  - [返回值](#返回值)
+  - [1. 简介](#1-简介)
+  - [2. 参数](#2-参数)
+  - [3. Statements and Expressions](#3-statements-and-expressions)
+  - [4. 返回值](#4-返回值)
 
 Last updated: 2023-10-10, 10:07
 @author Jiawei Mao
 ****
 
-## 简介
+## 1. 简介
 
 Rust 代码使用 snake_case 命令函数和变量，即所有函数和变量名都是小写，多个单词以下划线分开。示例：
 
@@ -35,7 +35,7 @@ fn another_function() {
 
 通过输入函数名和括号来调用定义的函数。上例在 `main` 中调用 `another_function` 函数。`another_function` 函数定义在 `main` 前面或后面都可以。
 
-## 参数
+## 2. 参数
 
 定义函数可以包含形参（parameters）：
 
@@ -76,7 +76,7 @@ fn print_labeled_measurement(value: i32, unit_label: char) {
 }
 ```
 
-## Statements and Expressions
+## 3. Statements and Expressions
 
 函数体由一系列语句（statement）组成，结尾可以包含一个表达式（expression）：
 
@@ -132,7 +132,7 @@ fn main() {
 
 该 block 的值是 4，该值赋值给 `y`。注意，`x+1` 行末没有分号，如果添加分号，就转换为了 statement，就不返回值。
 
-## 返回值
+## 4. 返回值
 
 函数可以返回值，必须在箭头后面声明返回类型。在 Rust 中，函数的返回值与函数体最终 expression 的值是同义的。通过 return 关键字可以提前从函数返回，不过大多数函数隐式返回最后一个 expression 的值。例如：
 

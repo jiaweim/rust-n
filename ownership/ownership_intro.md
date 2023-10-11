@@ -1,23 +1,24 @@
 # 所有权的概念
 
 - [所有权的概念](#所有权的概念)
-  - [简介](#简介)
-  - [堆和栈](#堆和栈)
-  - [Ownership 规则](#ownership-规则)
-  - [变量 scope](#变量-scope)
-  - [String 类型](#string-类型)
-  - [内存和分配](#内存和分配)
-    - [变量和数据交互：Move](#变量和数据交互move)
-    - [变量和数据交互：Clone](#变量和数据交互clone)
-    - [Stack 数据：Copy](#stack-数据copy)
-  - [Ownership 和函数](#ownership-和函数)
-  - [返回值和 Scope](#返回值和-scope)
+  - [1. 简介](#1-简介)
+  - [2. 堆和栈](#2-堆和栈)
+  - [3. Ownership 规则](#3-ownership-规则)
+  - [4. 变量 scope](#4-变量-scope)
+  - [5. String 类型](#5-string-类型)
+  - [6. 内存和分配](#6-内存和分配)
+    - [6.1. 变量和数据交互：Move](#61-变量和数据交互move)
+    - [6.2. 变量和数据交互：Clone](#62-变量和数据交互clone)
+    - [6.3. Stack 数据：Copy](#63-stack-数据copy)
+  - [7. Ownership 和函数](#7-ownership-和函数)
+  - [8. 返回值和 Scope](#8-返回值和-scope)
+
 
 Last updated: 2023-10-10, 19:49
 @author Jiawei Mao
 ****
 
-## 简介
+## 1. 简介
 
 所有权（ownership）是 Rust 的独特特性。它使 Rust 在没有垃圾收集器的情况下保证内存安全，因此理解 ownership 很重要。下面讨论 ownership 的几个概念：
 
@@ -33,7 +34,7 @@ Last updated: 2023-10-10, 19:49
 - 有些语言需要程序员显式分配和释放内存。
 - Rust 使用了一种新的方式：使用 ownership 管理内存，ownership 包含一组编译器检查的规则。违反任何规则，都无法编译成功。ownership 的所有特性都不会减慢程序的速度。
 
-## 堆和栈
+## 2. 堆和栈
 
 许多编程语言不需要考虑堆和栈，但像 Rust 这样的系统编程语言，数据在堆还是栈上会影响语言的行为。
 
@@ -49,7 +50,7 @@ heap 相对无序：当你将数据放到 heap 上，请求一定大小的内存
 
 跟踪代码中哪部分正在使用 heap 中哪些数据，最小化 heap 上重复数据，以及清理 heap 上未使用的数据，这些都是 ownership 可以解决的问题。理解 ownership 后，就不需要经常考虑 stack 和 heap，但是一定要知道 ownership 的主要目的是管理 heap 数据。
 
-## Ownership 规则
+## 3. Ownership 规则
 
 Ownership 规则：
 
@@ -57,7 +58,7 @@ Ownership 规则：
 - 一次只能有一个 owner。
 - 当 owner 超出 scope，对应值被删除。
 
-## 变量 scope
+## 4. 变量 scope
 
 变量的作用域（scope）是 ownership 的一种。scope 表示有效的范围。例如，定义一个变量：
 
@@ -82,7 +83,7 @@ let s = "hello";
 
 Rust 作用域和其它编程语言一样。
 
-## String 类型
+## 5. String 类型
 
 为了解释 ownership 的规则，下面介绍字符串，一个比基本类型更复杂的数据类型。
 
@@ -108,7 +109,7 @@ println!("{}", s); // This will print `hello, world!`
 
 那么，这里有什么不同？为什么可以修改 String，但字面量不行。关键不同在于这两种类型处理内存的方式。
 
-## 内存和分配
+## 6. 内存和分配
 
 对字符串字面量，在编译时就知道内容，即直接硬编码到最终的可执行文件中。
 
@@ -138,7 +139,7 @@ Rust 采用不同的方式：当变量超出 scope，就自动返还内存。例
 
 这种模式对 Rust 代码的编写方式影响很大。此时看起来很简单，但是在更复杂的情况，当我们想让多个变量使用分配到  heap 上的数据时，代码的行为可能会出乎意料。
 
-### 变量和数据交互：Move
+### 6.1. 变量和数据交互：Move
 
 在 Rust 中，多个变量可以用不同的方式与相同的数据交互。例如：
 
@@ -233,7 +234,7 @@ Rust 这种行为和浅复制有点类似，但是 Rust 直接使第一个变量
 
 该设计也说明 Rust 不会自动创建数据的深副本。因此，在运行时任何自动复制都是廉价高效的。
 
-### 变量和数据交互：Clone
+### 6.2. 变量和数据交互：Clone
 
 如果需要深度复制字符串的 heap 数据，而不仅仅是 stack 数据，可以使用 `clone` 方法。
 
@@ -250,7 +251,7 @@ println!("s1 = {}, s2 = {}", s1, s2);
 
 深度复制操作比较昂贵。
 
-### Stack 数据：Copy
+### 6.3. Stack 数据：Copy
 
 对整数，如下所示：
 
@@ -277,7 +278,7 @@ Rust 有一个名为 `Copy` 的注释，可以将其放在存储在 stack 的类
 - 字符类型 char
 - 只包含实现 `Copy` 类型的 Tuple，如 `(i32, i32)` 实现了 `Copy`，但是 `(i32, String)` 没有
 
-## Ownership 和函数
+## 7. Ownership 和函数
 
 向函数传递值的机制与给变量赋值的机制类似。将变量传递给函数也有移动和复制两种情况。示例：
 
@@ -303,7 +304,7 @@ fn makes_copy(some_integer: i32) { // some_integer comes into scope
 
 在调用 `takes_ownership` 后再使用 s，Rust 会抛出编译时错误。
 
-## 返回值和 Scope
+## 8. 返回值和 Scope
 
 返回值可以转移 ownership。示例：
 
