@@ -15,5 +15,6 @@
 
 - https://doc.rust-lang.org/book/
 - https://www.rust-lang.org/zh-CN/learn/get-started
-- https://course.rs/about-book.html
+- [Rust语言圣经（Rust Course）](https://course.rs/about-book.html)
 - [Rust 程序设计语言](https://rustwiki.org/zh-CN/book/)
+- [Rust By Example](https://doc.rust-lang.org/rust-by-example/hello.html)
