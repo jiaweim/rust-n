@@ -1,7 +1,9 @@
 # Rust 学习笔记
 
-- Rust 基础
-  - [变量和可变性](./Concepts/variables-and-mutablity.md)
+## Rust 基础
+
+- [变量](./tutorials/variables.md)
+
   - [数据类型](./Concepts/data-types.md)
   - [Rust 函数](./Concepts/functions.md)
   - [Rust 注释](./Concepts/comments.md)
@@ -11,6 +13,7 @@
   - [引用和借用](./ownership/references-and-borrowing.md)
   - [切片](./ownership/slices.md)
   - [错误处理](error_handling.md)
+- [Cargo](cargo.md)
 
 ## 参考
 

@@ -10,6 +10,12 @@
 #![crate_attribute]
 ```
 
+示例：忽略未使用变量
+
+```rust
+#![allow(unused_variables)]
+```
+
 - 当属性作用域模块或项时，语法为
 
 ```rust
