@@ -8,16 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e4a897d6-ff83-466f-8322-fb1f8c47bd86" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/lib.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/integration_test.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/rust-note.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/rust-note.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Concepts/data-types.md" beforeDir="false" afterPath="$PROJECT_DIR$/Concepts/data-types.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorials/base_type.md" beforeDir="false" afterPath="$PROJECT_DIR$/tutorials/base_type.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tutorials/cargo.md" beforeDir="false" afterPath="$PROJECT_DIR$/tutorials/cargo.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ownership/ownership_intro.md" beforeDir="false" afterPath="$PROJECT_DIR$/ownership/ownership_intro.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ownership/references-and-borrowing.md" beforeDir="false" afterPath="$PROJECT_DIR$/ownership/references-and-borrowing.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,6 +44,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Cargo.Run rustings.executor": "Run",
     "Cargo.Test tests::it_works.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -116,7 +111,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1697509305222</updated>
-      <workItem from="1697509306258" duration="1927000" />
+      <workItem from="1697509306258" duration="6655000" />
     </task>
     <servers />
   </component>

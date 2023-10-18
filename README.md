@@ -7,12 +7,12 @@
   - [字符、布尔和单元类型](./tutorials/char_bool_unit.md)
 - [函数](./tutorials/functions.md)
 - [所有权](./ownership/ownership_intro.md)
+- [引用和借用](./ownership/references-and-borrowing.md)
 
 
 
   - [Rust 注释](./Concepts/comments.md)
   - [控制流](./Concepts/control_flow.md)
-  - [引用和借用](./ownership/references-and-borrowing.md)
   - [切片](./ownership/slices.md)
   - [错误处理](error_handling.md)
 
