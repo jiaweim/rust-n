@@ -15,6 +15,9 @@
     - [as 类型转换](#as-类型转换)
     - [有理数和复数](#有理数和复数)
 
+Last updated: 2023-10-17, 11:28
+@author Jiawei Mao
+****
 
 ## 简介
 
@@ -76,6 +79,11 @@ let guess = "42".parse::<i32>().expect("Not a number!");
 ```
 
 ## 数值类型
+
+Rust 的数值类型与其它语言较为相似，但也有差异：
+
+- Rust 数值类型很多
+- 类型转换必须显式，例如 Rust 不会偷偷帮你把 16bit 整数转换为 32 bit 整数
 
 ### 整数
 
@@ -375,5 +383,19 @@ for i in 'a'..='z' {
 2. 编写代码
 
 ```rust
+use num::complex::Complex;
+
+fn main() {
+    let a = Complex { re: 2.1, im: -1.2 };
+    let b = Complex::new(11.1, 22.2);
+
+    let result = a + b;
+
+    println!("{} + {}i", result.re, result.im);
+}
+```
 
 ```
+13.2 + 21i
+```
+
