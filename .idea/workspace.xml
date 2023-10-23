@@ -9,12 +9,15 @@
   <component name="ChangeListManager">
     <list default="true" id="e4a897d6-ff83-466f-8322-fb1f8c47bd86" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Concepts/control_flow.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Concepts/data-types.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/collect/str.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ownership/images/trpl04-06.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ownership/slices.md" beforeDir="false" afterPath="$PROJECT_DIR$/ownership/slices.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pointer.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/type_complex.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/struct/struct_examples.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/struct/struct_intro.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/struct/struct_method_syntax.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutorials/string.md" beforeDir="false" afterPath="$PROJECT_DIR$/tutorials/string.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +118,8 @@
       <option name="presentableId" value="Default" />
       <updated>1697509305222</updated>
       <workItem from="1697509306258" duration="7254000" />
-      <workItem from="1697682380726" duration="5714000" />
+      <workItem from="1697682380726" duration="6437000" />
+      <workItem from="1698023474172" duration="7853000" />
     </task>
     <servers />
   </component>

@@ -8,13 +8,16 @@
 - [函数](./tutorials/functions.md)
 - [所有权](./ownership/ownership_intro.md)
 - [引用和借用](./ownership/references-and-borrowing.md)
-
-
-
-  - [Rust 注释](./Concepts/comments.md)
-  - [控制流](./Concepts/control_flow.md)
-  - [切片](./ownership/slices.md)
-  - [错误处理](error_handling.md)
+- 复合数据类型
+  - [字符串](./tutorials/string.md)
+  - [元组](./tutorials/tuple.md)
+  - [结构体](./tutorials/struct.md)
+  - [枚举](./tutorials/enum.md)
+  - [数组](./tutorials/array.md)
+- [流程控制](./tutorials/control_flow.md)
+- [Rust 注释](./Concepts/comments.md)
+- [切片](./ownership/slices.md)
+- [错误处理](error_handling.md)
 
 ## 工具
 

@@ -20,10 +20,14 @@
   - [字符串转义](#字符串转义)
   - [UTF-8 字符串操作](#utf-8-字符串操作)
     - [字符](#字符)
+    - [字节](#字节)
+    - [获取子串](#获取子串)
   - [字符串切片作为参数](#字符串切片作为参数)
+  - [更多示例](#更多示例)
 
+2023-10-23, 13:51
 @author Jiawei Mao
-***
+****
 
 ## 简介
 
@@ -524,11 +528,11 @@ string_clear = ""
 
 1. 使用 `+` 或者 `+=` 连接字符串
 
-使用 `+` 或者 `+=` 连接字符串，要求右边的参数必须为字符串的切片引用（Slice）类型。
+使用 `+` 或者 `+=` 连接字符串，要求右边的参数必须为字符串的**切片引用**（Slice）类型。
 
 其实调用 `+` 相当于调用 `std::string::add()` 方法，`add()` 的第二个参数是引用类型。因此在使用 `+` 时必须传递切片引用类型。不能直接传递 `String` 类型。
 
-`+` 是返回一个新的字符串，所以变量声明不需要 `mut` 关键字修饰。
+`+` 返回一个新的字符串，所以变量声明不需要 `mut` 关键字修饰。
 
 **示例：**
 
@@ -651,7 +655,7 @@ A string with "# in it. And even "##!
 
 ### 字符
 
-如果想以 Unicode 字符的方式遍历字符串，最好的方法是使用 `chars` 方法：
+使用 `chars` 方法遍历字符串的 Unicode 字符：
 
 ```rust
 for c in "中国人".chars() {
@@ -665,7 +669,33 @@ for c in "中国人".chars() {
 人
 ```
 
+### 字节
 
+使用 `bytes()` 遍历字符串底层字节数组：
+
+```rust
+fn main() {
+    for b in "中国人".bytes() {
+        println!("{}", b);
+    }
+}
+```
+
+```sh
+228
+184
+173
+229
+155
+189
+228
+186
+186
+```
+
+### 获取子串
+
+从 UTF-8 字符串中获取子串较为复杂。可以考虑使用 `utf8_slice` 库。
 
 ## 字符串切片作为参数
 
@@ -707,3 +737,31 @@ fn main() {
     let word = first_word(my_string_literal);
 }
 ```
+
+## 更多示例
+
+- & 可以将 `Box<str>` 转换为 `&str`
+
+```rust
+fn main() {
+    let s: Box<str> = "hello, world".into();
+    greetings(&s) // 转换参数
+}
+
+fn greetings(s: &str) {
+    println!("{}", s)
+}
+```
+
+- 新建空 String
+
+```rust
+fn main() {
+    let mut s = String::new();
+    s.push_str("hello, world");
+    s.push('!');
+ 
+    assert_eq!(s, "hello, world!");
+ }
+```
+
