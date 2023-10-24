@@ -1,8 +1,33 @@
-fn main() {
-    let a = [4,3,2,1];
+// 填空
+enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
 
-    // 通过索引和值的方式迭代数组 `a`
-    for (i,v) in a.iter().enumerate() {
-        println!("第{}个元素是{}",i+1,v);
+fn main() {
+    let msgs = [
+        Message::Quit,
+        Message::Move { x: 1, y: 3 },
+        Message::ChangeColor(255, 255, 0)
+    ];
+
+    for msg in msgs {
+        show_message(msg)
+    }
+}
+
+fn show_message(msg: Message) {
+    match msg {
+        Message::Move { x: a, y: b } => { // 这里匹配 Message::Move
+            assert_eq!(a, 1);
+            assert_eq!(b, 3);
+        }
+        Message::ChangeColor(_, g, b) => {
+            assert_eq!(g, 255);
+            assert_eq!(b, 0);
+        }
+        __ => println!("no data in these variants")
     }
 }
