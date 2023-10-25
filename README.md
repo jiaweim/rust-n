@@ -16,6 +16,7 @@
   - [数组](./tutorials/array.md)
 - [流程控制](./tutorials/control_flow.md)
 - [模式匹配](./tutorials/pattern_match.md)
+- [方法](./tutorials/method.md)
 - [Rust 注释](./Concepts/comments.md)
 - [切片](./ownership/slices.md)
 - [错误处理](error_handling.md)
