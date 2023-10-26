@@ -6,9 +6,14 @@
   - [结构体中使用泛型](#结构体中使用泛型)
   - [枚举中使用泛型](#枚举中使用泛型)
   - [方法中使用泛型](#方法中使用泛型)
+    - [为特性泛型实现方法](#为特性泛型实现方法)
+  - [const 泛型（Rust 1.51+）](#const-泛型rust-151)
+    - [const 泛型表达式](#const-泛型表达式)
+  - [泛型性能](#泛型性能)
 
+2023-10-26, 11:42
 @author Jiawei Mao
-***
+****
 
 ## 简介
 
@@ -208,7 +213,7 @@ fn main() {
 
 使用泛型参数前，依然需要提前声明 `impl<T>`，这样才能在 `Point<T>` 中使用它。需要注意的是，此时 `Point<T>` 不再是泛型声明，而是一个完整的结构体类型。
 
-除了结构体中的泛型参数，还能在结构体的方法中定义额外的泛型参数，与泛型函数一样：
+- 除了结构体中的泛型参数，在结构体的方法中可以定义额外的泛型参数
 
 ```rust
 struct Point<T, U> {
@@ -234,4 +239,190 @@ fn main() {
     println!("p3.x = {}, p3.y = {}", p3.x, p3.y);
 }
 ```
+
+这里，`T`, `U` 是定义在结构体 Point 上的泛型参数，`V,W` 是定义在方法 mixup 上的泛型参数。一个是结构体泛型，一个是函数泛型。
+
+### 为特性泛型实现方法
+
+对 `Point<T>` 类型，不仅能定义基于 T 的方法，还能针对特定类型定义方法：
+
+```rust
+impl Point<f32> {
+    fn distance_from_origin(&self) -> f32 {
+        (self.x.powi(2) + self.y.powi(2)).sqrt()
+    }
+}
+```
+
+这里为 `Point<f32>` 类型实现一个 `distance_from_origin` 方法，其它 `T` 不是 `f32` 类型的 `Point<T>` 实例没有此方法。
+
+## const 泛型（Rust 1.51+）
+
+在数组那节有提到一点：`[i32; 2]` 和 `[i32; 3]` 是不同的数组类型，比如:
+
+```rust
+fn display_array(arr: [i32; 3]) {
+    println!("{:?}", arr);
+}
+fn main() {
+    let arr: [i32; 3] = [1, 2, 3];
+    display_array(arr);
+
+    let arr: [i32;2] = [1,2];
+    display_array(arr);
+}
+```
+
+运行报错：
+
+```sh
+error[E0308]: mismatched types // 类型不匹配
+  --> src/main.rs:10:19
+   |
+10 |     display_array(arr);
+   |                   ^^^ expected an array with a fixed size of 3 elements, found one with 2 elements
+                          // 期望一个长度为3的数组，却发现一个长度为2的
+```
+
+结合代码和报错可以看出，`[i32; 3]` 和 `[i32; 2]` 是两个不同的类型。
+
+- 修改代码，让 display_array 能打印任意长度的 i32 数组
+
+```rust
+fn display_array(arr: &[i32]) {
+    println!("{:?}", arr);
+}
+
+fn main() {
+    let arr: [i32; 3] = [1, 2, 3];
+    display_array(&arr);
+
+    let arr: [i32;2] = [1,2];
+    display_array(&arr);
+}
+```
+
+将参数设置为数组切片类型，然后传入 `arr` 的不可变引用即可。
+
+- 继续将 `i32` 改成所有类型的数组
+
+```rust
+fn display_array<T: std::fmt::Debug>(arr: &[T]) {
+    println!("{:?}", arr);
+}
+
+fn main() {
+    let arr: [i32; 3] = [1, 2, 3];
+    display_array(&arr);
+
+    let arr: [i32;2] = [1,2];
+    display_array(&arr);
+}
+```
+
+也不难，唯一要注意的是需要对 T 进行限制 `std::fmt::Debug`，表明 T 可以用在 `println!("{:?}", arr)` 中，因为 `{:?}` 形式的格式化输出需要 arr 实现该特征。
+
+通过引用可以解决任何类型数组的问题，但是如果引用不适用呢？
+
+const 泛型，针对值的泛型，可以处理数组长度问题：
+
+```rust
+fn display_array<T: std::fmt::Debug, const N: usize>(arr: [T; N]) {
+    println!("{:?}", arr);
+}
+
+fn main() {
+    let arr: [i32; 3] = [1, 2, 3];
+    display_array(arr);
+
+    let arr: [i32; 2] = [1, 2];
+    display_array(arr);
+}
+```
+
+这里，`T` 是基于类型的泛型参数，`N` 是基于值的泛型参数，用来替代数组的长度。
+
+`N` 就是 const 泛型，定义语法为 `const N: usize`，表示 const 泛型 `N`，它基于的值类型是 `usize`。
+
+在泛型参数之前，Rust 完全不适合复杂的矩阵运算，const 泛型解决了该问题。
+
+### const 泛型表达式
+
+假设某段代码需要在内存很小的平台上运行，因此需要限制函数参数占用的内存，此时就可以使用 `const` 泛型表达式来实现：
+
+```rust
+// 目前只能在nightly版本下使用
+#![allow(incomplete_features)]
+#![feature(generic_const_exprs)]
+
+fn something<T>(val: T)
+where
+    Assert<{ core::mem::size_of::<T>() < 768 }>: IsTrue,
+    //       ^-----------------------------^ 这里是一个 const 表达式，换成其它的 const 表达式也可以
+{
+    //
+}
+
+fn main() {
+    something([0u8; 0]); // ok
+    something([0u8; 512]); // ok
+    something([0u8; 1024]); // 编译错误，数组长度是1024字节，超过了768字节的参数长度限制
+}
+
+// ---
+
+pub enum Assert<const CHECK: bool> {
+    //
+}
+
+pub trait IsTrue {
+    //
+}
+
+impl IsTrue for Assert<true> {
+    //
+}
+```
+
+TODO
+
+## 泛型性能
+
+在 Rust 中泛型是零成本的抽象，意味着你在使用泛型时，完全不用担心性能上的问题。
+
+但是任何选择权衡，既然获得了性能上的优势，那么失去了什么？Rust 是在编译期为泛型对应的多个类型，生成各自的代码，因此损失了编译速度并增加了最终生成文件的大小。
+
+具体来说，Rust 通过在编译时进行泛型代码的 **单态化**(monomorphization)来保证效率。单态化填充编译时使用的具体类型，将通用代码转换为特定代码。
+
+编译器所做的工作正好与我们创建泛型函数的步骤相反，编译器寻找所有泛型代码被调用的位置并针对具体类型生成代码。
+
+以 `Option` 为例：
+
+```rust
+let integer = Some(5);
+let float = Some(5.0);
+```
+
+当 Rust 编译该代码时，会进行单态化。编译器读取传递给 `Option<T>` 的值，发现有两种 `Option<T>`，其中为 i32，一种为 f64.为此，编译器将泛型定义 `Option<T>` 展开为 `Option_i32` 和 `Option_f64`，接着将泛型定义替换为这两个具体的定义。
+
+编译器生成的单态化版本的代码类似：
+
+```rust
+enum Option_i32 {
+    Some(i32),
+    None,
+}
+
+enum Option_f64 {
+    Some(f64),
+    None,
+}
+
+fn main() {
+    let integer = Option_i32::Some(5);
+    let float = Option_f64::Some(5.0);
+}
+```
+
+我们可以使用泛型来编写不重复的代码，而 Rust 将会为每一个实例编译其特定类型的代码。这意味着在使用泛型没有运行时开销；当代码运行，它的执行效率就跟好像手写每个具体定义的重复代码一样。这个单态化过程正是 Rust 泛型在运行时极其高效的原因。
 
