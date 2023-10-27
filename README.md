@@ -22,8 +22,8 @@
 - [特征对象](./tutorials/trait-object.md)
 - [特征进阶](./tutorials/trait-advanced.md)
 - [动态数组](./tutorials/collect_vec.md)
+- [HashMap](./tutorials/collect_hashmap.md)
 - [Rust 注释](./Concepts/comments.md)
-- [切片](./ownership/slices.md)
 - [错误处理](error_handling.md)
 
 ## 工具
