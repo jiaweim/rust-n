@@ -13,9 +13,11 @@
     - [三条消除规则](#三条消除规则)
   - [方法中的生命周期](#方法中的生命周期)
   - [静态生命周期](#静态生命周期)
+  - [示例](#示例)
 
+2023-10-30, 08:59
 @author Jiawei Mao
-***
+****
 
 ## 简介
 
@@ -583,8 +585,34 @@ impl<'a> ImportantExcerpt<'a> {
 
 ## 静态生命周期
 
-在 Rust 中有一个非常特殊的生命周期 `'static`，拥有该生命周期的引用可以和整个程序活得一样久。
+`'static` 是一个特殊的生命周期，拥有该生命周期的引用和整个程序活得一样久。
 
-在之前我们学过字符串字面量，提到过它是被硬编码进 Rust 的二进制文件中，因此这些字符串变量
-全部具有 'static 的生命周期：
+字符串字面量被硬编码进 Rust 的二进制文件中，它们全部具有 `'static` 生命周期：
 
+```rust
+let s: &'static str = "我没啥优点，就是活得久，嘿嘿";
+```
+
+总结下：
+
+- `'static` 生命周期和程序活得一样久，例如字符串字面量和特征对象
+- 实在遇到解决不了的生命周期标注问题，可以尝试 `T: 'static`
+
+## 示例
+
+```rust
+use std::fmt::Display;
+
+fn longest_with_an_announcement<'a, T>(x: &'a str,
+                                       y: &'a str,
+                                       ann: T) -> &'a str
+    where T: Display,
+{
+    println!("Announcement! {}", ann);
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+```

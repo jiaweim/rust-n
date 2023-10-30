@@ -1,15 +1,12 @@
 // use std::convert::TryInto;
 
+use std::fmt::Display;
+
 fn main() {
-    {
-        let r;
+    let s = "hello";
+    println!("{}, world", s);
 
-        {
-            let x = 5;
-            r = &x;
-        }
-
-        println!("r: {}", r);
-    }
+    let s1 = format!("{}, world", s);
+    print!("{}", s1);
+    print!("{}\n", "!");
 }
-

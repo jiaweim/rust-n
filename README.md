@@ -23,8 +23,14 @@
 - [特征进阶](./tutorials/trait-advanced.md)
 - [动态数组](./tutorials/collect_vec.md)
 - [HashMap](./tutorials/collect_hashmap.md)
-- [Rust 注释](./Concepts/comments.md)
-- [错误处理](error_handling.md)
+- [生命周期](./tutorials/lifetime.md)
+- [错误处理](./tutorials/error_handling.md)
+- [项目和包](./tutorials/crate.md)
+- [模块](./tutorials/module.md)
+- [use](./tutorials/use.md)
+- [注释和文档](./tutorials/comment.md)
+- [格式化输出](./tutorials/format_output.md)
+
 
 ## 工具
 
