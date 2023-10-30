@@ -1,18 +1,18 @@
 # 项目和包
 
 - [项目和包](#项目和包)
-  - [简介](#简介)
-  - [项目 Package](#项目-package)
-    - [二进制 Package](#二进制-package)
-    - [库 Package](#库-package)
-  - [Package 和包的区别](#package-和包的区别)
-  - [Package 典型结构](#package-典型结构)
+  - [1. 简介](#1-简介)
+  - [2. 项目 Package](#2-项目-package)
+    - [2.1. binary Package](#21-binary-package)
+    - [2.2. library Package](#22-library-package)
+  - [3. Package 和包的区别](#3-package-和包的区别)
+  - [4. Package 的典型结构](#4-package-的典型结构)
 
 2023-10-30, 14:31
 @author Jiawei Mao
 ****
 
-## 简介
+## 1. 简介
 
 Rust 组织管理代码的结构包括：
 
@@ -22,18 +22,18 @@ Rust 组织管理代码的结构包括：
 
 包会将相关的功能打包在一起，便于共享。
 
-## 项目 Package
+## 2. 项目 Package
 
-Rust 的 Package 和其它编程语言的项目对应，可以理解为软件包。
+Rust 的 Package 和其它编程语言的**项目**对应，可以理解为软件包。
 
-`Package` 是一个项目，它包含独立的 `Cargo.toml` 文件，并包含至少一个包。一个 `Package` 可以包含：
+`Package` 是一个项目，它包含独立的 `Cargo.toml` 文件，并包含至少一个包。一个项目可以包含：
 
-- 一个库(library)类型的包
-- 多个可执行二进制类型的包
+- 一个 `library` 类型的包
+- 多个可执行 `binary` 类型的包
 
-### 二进制 Package
+### 2.1. binary Package
 
-- 创建二进制 Package
+创建 binary 项目：
 
 ```sh
 $ cargo new my-project
@@ -45,13 +45,18 @@ $ ls my-project/src
 main.rs
 ```
 
-这里，`Cargo` 创建了一个名为 `my-project` 的 `Package`，同时在其中创建了 `Cargo.toml` 文件，该文件里面没有指定 `src/main.rs` 为程序的入口，因为 Cargo 默认将 `src/main.rs` 作为二进制包的根文件，该二进制包的包名跟所属 `Package` 相同，在这里都是 my-project，所有的代码执行都从该文件中的 `fn main()` 函数开始。
+说明：
 
-使用 `cargo run` 可以运行该项目，输出：Hello, world!。
+- `Cargo` 创建了一个名为 `my-project` 的项目，并在其中创建了 `Cargo.toml` 文件
+- `Cargo.toml` 没有指定 `src/main.rs` 为程序入口，但 `Cargo` 默认将 `src/main.rs` 作为 binary 包的根文件：
+  - 即创建 `my-project` 项目时创建了同名的 binary 包
+  - 所有代码从 `src/main.rs` 文件中的 `fn main()` 函数开始执行
 
-### 库 Package
+使用 `cargo run` 可以运行该项目，输出：`Hello, world!`。
 
-创建库类型的 Package：
+### 2.2. library Package
+
+创建 `library` 类型的项目：
 
 ```sh
 $ cargo new my-lib --lib
@@ -63,30 +68,30 @@ $ ls my-lib/src
 lib.rs
 ```
 
-运行 my-lib 会报错：
+运行 my-lib 报错：
 
 ```sh
 $ cargo run
 error: a bin target must be available for `cargo run`
 ```
 
-`library` 类型的 `Package` 只能被其它项目引用，不能独立运行。
+`library` 类型的`项目`只能被其它项目引用，不能独立运行。
 
-与 `src/main.rs` 一样，Cargo 对包含 `src/lib.rs` 的 Package 认为包含一个 library 类型的同名包 `my-lib`，该包的根文件是 `src/lib.rs`。
+与 `src/main.rs` 一样，`Cargo` 对包含 `src/lib.rs` 文件的项目自动创建一个同名的 library 类型包 `my-lib`，该包的根文件是 `src/lib.rs`。
 
-## Package 和包的区别
+## 3. Package 和包的区别
 
-容易混淆 Package 和包，是因为 `cargo new` 创建的 Pacakge 和它包含的包同名。
+之所以容易混淆 Package 和包，是因为 `cargo new` 创建的 Pacakge 和它包含的包同名。
 
-不过 Package 是一个项目，而包只是一个编译单元：`src/main.rs` 和 `src/lib.rs` 都是编译单元，都是包。
+不过 Package 是一个项目，而包只是一个编译单元：`src/main.rs` 和 `src/lib.rs` 都是编译单元，也就是包。
 
-## Package 典型结构
+## 4. Package 的典型结构
 
-上面创建的 `Package` 仅包含` src/main.rs` 文件，表示它仅包含一个二进制同名包 `my-project`。
+上面创建的 `Package` 仅包含` src/main.rs` 文件，表示它仅包含一个 binary 同名包 `my-project`。
 
-如果一个 `Package` 同时拥有 `src/main.rs` 和 `src/lib.rs`，表示它包含两个包：库包和二进制包，这两个包名都是 `my-project`：都与 `Package` 同名。
+如果一个 `Package` 同时包含 `src/main.rs` 和 `src/lib.rs`，表示它包含两个包：`library` 包和 `binary` 包，且包名都是 `my-project`。
 
-一个真实项目中的 `Package` 会包含多个二进制包，这些包文件被放在 `src/bin` 目录，每一个文件都是独立的二进制包，同时也会包含一个库包，该包只能存在一个 `src/lib.rs`：
+真实的 `Package` 可能包含多个 `binary` 包，这些包文件放在 `src/bin` 目录，每一个文件对应一个独立的 binary 包，同时也会包含一个 library 包，该包只能有一个 `src/lib.rs`：
 
 ```
 .
@@ -108,11 +113,11 @@ error: a bin target must be available for `cargo run`
 
 说明：
 
-- 唯一库包：`src/lib.rs`
-- 默认二进制包：`src/main.rs`，编译后生成的可执行文件与 `Package` 同名
-- 其余二进制包：`src/bin/main1.rs` 和 `src/bin/main2.rs`，它们会分别生成一个文件同名的二进制可执行文件
+- 唯一 library 包：`src/lib.rs`
+- 默认 binary 包：`src/main.rs`，编译后生成的可执行文件与 `Package` 同名
+- 其余 binary 包：`src/bin/main1.rs` 和 `src/bin/main2.rs`，它们会分别生成一个与文件同名的 binary 可执行文件
 - 集成测试文件：`tests` 目录下
 - 基准性能测试 `benchmark` 文件：`benches` 目录下
 - 项目示例：`examples` 目录下
 
-这种目录结构基本上是 Rust 的标准目录结构，在 GitHub 的大多数项目上，你都将看到它的身影。
+这基本上是 Rust 的标准目录结构，在 GitHub 的大多数项目上都与此类似。
