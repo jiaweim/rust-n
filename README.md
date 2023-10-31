@@ -5,7 +5,8 @@
 - [变量](./tutorials/variables.md)
 - [基本类型](./tutorials/base_type.md)
   - [字符、布尔和单元类型](./tutorials/char_bool_unit.md)
-- [函数](./tutorials/functions.md)
+  - [语句和表达式](./tutorials/statement.md)
+  - [函数](./tutorials/functions.md)
 - [所有权](./ownership/ownership_intro.md)
 - [引用和借用](./ownership/references-and-borrowing.md)
 - 复合数据类型
@@ -31,6 +32,9 @@
 - [注释和文档](./tutorials/comment.md)
 - [格式化输出](./tutorials/format_output.md)
 
+## Rust 进阶
+
+
 
 ## 工具
 
@@ -50,5 +54,6 @@
 - [Rust By Example](https://doc.rust-lang.org/rust-by-example/hello.html)
 - [通过例子学 Rust](https://rustwiki.org/zh-CN/rust-by-example/)
 - [Rust 语言实战](https://zh.practice.rs/why-exercise.html)
-- [Rust 标准库](https://rustwiki.org/zh-CN/std/)
+- [Rust 标准库](https://doc.rust-lang.org/std/index.html)
+- [Rust 标准库中文版](https://rustwiki.org/zh-CN/std/)
 - [Rust 秘典](https://nomicon.purewhite.io/intro.html)

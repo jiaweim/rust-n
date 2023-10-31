@@ -1,12 +1,22 @@
-// use std::convert::TryInto;
-
-use std::fmt::Display;
-
 fn main() {
-    let s = "hello";
-    println!("{}, world", s);
+    println!("Success!");
+}
 
-    let s1 = format!("{}, world", s);
-    print!("{}", s1);
-    print!("{}\n", "!");
+fn get_option(tp: u8) -> Option<i32> {
+    match tp {
+        1 => {
+            // TODO
+        }
+        _ => {
+            // TODO
+        }
+    };
+
+    // 这里与其返回一个 None，不如使用发散函数替代
+    never_return_fn()
+}
+
+// 使用三种方法实现以下发散函数
+fn never_return_fn() -> ! {
+    unimplemented!();
 }

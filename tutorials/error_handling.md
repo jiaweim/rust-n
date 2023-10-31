@@ -2,10 +2,10 @@
 
 - [错误处理](#错误处理)
   - [简介](#简介)
-  - [panic](#panic)
+  - [panic! 处理不可恢复错误](#panic-处理不可恢复错误)
     - [终止 panic](#终止-panic)
     - [何时用 panic!](#何时用-panic)
-  - [可恢复错误 Result](#可恢复错误-result)
+  - [Result 处理可恢复错误](#result-处理可恢复错误)
     - [枚举 Result](#枚举-result)
     - [处理错误](#处理错误)
     - [unwrap 和 expect](#unwrap-和-expect)
@@ -30,11 +30,9 @@ Rust 将错误分为两类：
 - 用 `Result<T, E>` 类型处理可恢复错误
 - 用 `panic!` 宏处理不可恢复错误
 
-## panic
+## panic! 处理不可恢复错误
 
-`panic!` 用于处理不可恢复错误。
-
-触发 panic 的方式有两种：
+`panic!` 用于处理不可恢复错误。触发 panic 的方式有两种：
 
 - 被动：执行会造成 panic 的代码（比如访问越界访问数组）
 - 主动：显式调用 `panic!` 宏
@@ -120,7 +118,7 @@ let home: IpAddr = "127.0.0.1".parse().unwrap();
 - 确定代码正确
 - 内存安全问题，如数组越界
 
-## 可恢复错误 Result
+## Result 处理可恢复错误
 
 `Result<T, E>` 是一种更温和的错误处理方式，其定义如下：
 
