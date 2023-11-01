@@ -34,7 +34,7 @@
 
 ## Rust 进阶
 
-
+- [属性](./tutorials/attribute.md)
 
 ## 工具
 

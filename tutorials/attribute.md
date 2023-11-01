@@ -1,6 +1,17 @@
 # 属性
 
-## 简介
+- [属性](#属性)
+  - [语法](#语法)
+  - [crate 属性](#crate-属性)
+  - [dead\_code](#dead_code)
+  - [crate](#crate)
+  - [cfg](#cfg)
+    - [自定义条件](#自定义条件)
+
+@author Jiawei Mao
+***
+
+## 语法
 
 属性是应用于模块、crate或项的元数据。
 
@@ -39,6 +50,11 @@
 #[attribute(value, value2, value3,
             value4, value5)]
 ```
+
+## crate 属性
+
+
+
 
 ## dead_code
 

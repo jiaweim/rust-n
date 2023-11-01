@@ -1,32 +1,32 @@
-# 特征
+# trait
 
-- [特征](#特征)
-  - [简介](#简介)
-  - [定义特征](#定义特征)
-  - [为类型实现特征](#为类型实现特征)
-    - [特性定义与实现的位置](#特性定义与实现的位置)
-    - [默认实现](#默认实现)
-  - [特征作为函数参数](#特征作为函数参数)
-  - [特征约束](#特征约束)
-    - [多重约束](#多重约束)
-    - [where 约束](#where-约束)
-    - [实现特定特征约束的方法](#实现特定特征约束的方法)
-  - [返回 impl trait](#返回-impl-trait)
-  - [修复 largest 函数](#修复-largest-函数)
-  - [通过 derive 派生特征](#通过-derive-派生特征)
-  - [更多示例](#更多示例)
-    - [自定义 + 操作](#自定义--操作)
-    - [自定义输出](#自定义输出)
+- [trait](#trait)
+  - [1. 简介](#1-简介)
+  - [2. 定义 trait](#2-定义-trait)
+  - [3. 为类型实现 trait](#3-为类型实现-trait)
+    - [3.1. trait 定义与实现的位置](#31-trait-定义与实现的位置)
+    - [3.2. 默认实现](#32-默认实现)
+  - [4. trait 作为参数](#4-trait-作为参数)
+  - [5. trait 约束](#5-trait-约束)
+    - [5.1. 多重约束](#51-多重约束)
+    - [5.2. where 简化约束](#52-where-简化约束)
+    - [5.3. 实现特定 trait 约束的方法](#53-实现特定-trait-约束的方法)
+  - [6. 返回 impl trait](#6-返回-impl-trait)
+  - [7. 修复 largest 函数](#7-修复-largest-函数)
+  - [8. 通过 derive 派生 trait](#8-通过-derive-派生-trait)
+  - [9. 更多示例](#9-更多示例)
+    - [9.1. 自定义 + 操作](#91-自定义--操作)
+    - [9.2. 自定义输出](#92-自定义输出)
 
 2023-10-26, 14:58
 @author Jiawei Mao
 ****
 
-## 简介
+## 1. 简介
 
-Rust 的特征 `trait` 和其它语言的接口类似。
+Rust 的 `trait` 和其它语言的接口类似。
 
-之前已经见过许多特征，例如 `#[derive(Debug)]` 在定义的类型上自动派生 Debug 特征。再比如：
+之前已经见过许多 trait，例如 `#[derive(Debug)]` 在定义的类型上自动派生 `Debug` trait。再比如：
 
 ```rust
 fn add<T: std::ops::Add<Output = T>>(a:T, b:T) -> T {
@@ -34,11 +34,11 @@ fn add<T: std::ops::Add<Output = T>>(a:T, b:T) -> T {
 }
 ```
 
-通过 `std::ops::Add` 特征来限制 `T`，只有 `T` 实现了 `std::ops::Add` 才能进行加法操作。
+通过 `std::ops::Add` trait 限制 `T`，只有 `T` 实现了 `std::ops::Add` 才能进行加法操作。
 
-## 定义特征
+## 2. 定义 trait
 
-定义特征是把一些方法组合在一起，定义一个实现某些目标所需的行为的集合。
+定义 trait：定义一组实现某个目标所需的行为。
 
 示例：
 
@@ -48,79 +48,87 @@ pub trait Summary {
 }
 ```
 
-这里使用 `trait` 关键字来声明特征，`Summary` 是特征名。在大括号中定义了该特征的所有方法，在这个例子中是 `fn summarize(&self) -> String`。
+说明：
 
-特征只定义特征方法的签名，而不实现，方法签名结尾是 `;` ，而不是一个 `{}` 。
+- 使用 `trait` 关键字声明 trait
+- `Summary` 是特征名
+- 在大括号中定义 trait 的所有方法，上例中为 `fn summarize(&self) -> String`
+- trait 只定义方法签名，方法签名以 `;` 结尾，而不是一个 `{}` 
 
-每一个实现该特征的类型都需要具体实现该特征的相应方法，编译器也会确保任何实现 `Summary` 特征的类型都拥有与这个签名的定义完全一致的 `summarize` 方法。
+每一个实现该 trait 的类型都需要实现该 trait 的相应方法，编译器也会确保任何实现 `Summary` trait 的类型都拥有与这个签名完全一致的 `summarize` 方法。
 
-## 为类型实现特征
+## 3. 为类型实现 trait
 
-实现 `Summary` 特征：
+为 `NewsArticle` 结构体实现 `Summary` trait，这里使用标题、作者和位置作为 `summarize` 的返回值：
 
 ```rust
-pub trait Summary {
-    fn summarize(&self) -> String;
+pub struct NewsArticle {
+    pub headline: String,
+    pub location: String,
+    pub author: String,
+    pub content: String,
 }
 
-pub struct Post {
-    pub title: String, // 标题
-    pub author: String, // 作者
-    pub content: String, // 内容
-}
-
-impl Summary for Post {
+impl Summary for NewsArticle {
     fn summarize(&self) -> String {
-        format!("文章{}, 作者是{}", self.title, self.author)
+        format!("{}, by {} ({})", self.headline, self.author, self.location)
     }
 }
 
-pub struct Weibo {
+pub struct Tweet {
     pub username: String,
-    pub content: String
+    pub content: String,
+    pub reply: bool,
+    pub retweet: bool,
 }
 
-impl Summary for Weibo {
+impl Summary for Tweet {
     fn summarize(&self) -> String {
-        format!("{}发表了微博{}", self.username, self.content)
+        format!("{}: {}", self.username, self.content)
     }
 }
 ```
 
-实现特征的语法与为结构体、枚举实现方法很像： `impl Summary for Post`，然后在 `impl` 的花括号中实现该特征的具体方法。
+实现 trait 的语法与为结构体、枚举实现方法很像： `impl Summary for NewsArticle`，然后在 `impl` 的花括号中实现该 trait 的具体方法。
 
-接下来就可以在这个类型上调用特征的方法：
+接下来就可以在这个类型上调用 trait 的方法：
 
 ```rust
-fn main() {
-    let post = Post{title: "Rust语言简介".to_string(),author: "Sunface".to_string(), content: "Rust棒极了!".to_string()};
-    let weibo = Weibo{username: "sunface".to_string(),content: "好像微博没Tweet好用".to_string()};
+use rustings::{Summary, Tweet};
 
-    println!("{}",post.summarize());
-    println!("{}",weibo.summarize());
+fn main() {
+    let tweet = Tweet {
+        username: String::from("horse_ebooks"),
+        content: String::from(
+            "of course, as you probably already know, people",
+        ),
+        reply: false,
+        retweet: false,
+    };
+    println!("1 new tweet: {}", tweet.summarize());
 }
 ```
 
 ```sh
-文章 Rust 语言简介, 作者是Sunface
-sunface发表了微博好像微博没Tweet好用
+1 new tweet: horse_ebooks: of course, as you probably already know, people
 ```
 
-### 特性定义与实现的位置
+### 3.1. trait 定义与实现的位置
 
-上面将 `Summary` 定义成了 `pub`。这样，其它人也可以引入 `Summary` 特征进行实现。
+上面将 `Summary` 定义成了 `pub`。这样，其它人也可以引入 `Summary` trait 进行实现。
 
-关于特征实现与定义的位置，有一条基本原则：如果想要为类型 `A` 实现特征 `T`，那么 `A` 或者 `T` 至少有一个在当前作用域中定义！
+关于 trait 实现与定义的位置，有一条基本原则：如果想要为类型 `A` 实现 trait `T`，那么 `A` 或者 `T` 至少有一个在当前作用域中定义！例如:
 
-例如我们可以为上面的 `Post` 类型实现标准库中的 `Display` 特征，这是因为 `Post` 类型定义在当前的作用域中。我们也可以在当前包中为 `String` 类型实现 `Summary` 特征，因为 `Summary` 定义在当前作用域中。
+- 可以为上面的 `NewsArticle` 类型实现标准库中的 `Display` trait，这是因为 `NewsArticle` 类型定义在当前作用域。
+- 也可以在当前包中为 `String` 类型实现 `Summary` trait，因为 `Summary` 定义在当前作用域。
 
-但是你无法在当前作用域中，为 `String` 类型实现 `Display` 特征，因为它们俩都定义在标准库中，其定义所在的位置都不在当前作用域。
+但是无法在当前作用域中，为 `String` 类型实现 `Display` trait，因为它俩都定义在标准库中，都不在当前作用域。
 
-该规则被称为孤儿规则，可以确保其它人编写的代码不会破坏你的代码，也确保了你不会莫名其妙就破坏了风马牛不相及的代码。
+该规则被称为**孤儿规则**，可以确保其它人编写的代码不会破坏你的代码，也确保了你不会莫名其妙就破坏了风马牛不相及的代码。
 
-### 默认实现
+### 3.2. 默认实现
 
-可以在特征中定义具有默认实现的方法，这样其它类型无需再实现该方法，或者也可以选择重载该方法：
+可以在 trait 中定义具有默认实现的方法，这样其它类型无需再实现该方法，或者也可以选择重载该方法：
 
 ```rust
 pub trait Summary {
@@ -179,9 +187,9 @@ println!("1 new weibo: {}", weibo.summarize());
 
 `weibo.summarize()` 会先调用 `Summary` 特征默认实现的 `summarize` 方法，通过该方法进而调用 `Weibo` 为 `Summary` 实现的 `summarize_author` 方法，最终输出：`1 new weibo: (Read more from @horse_ebooks...)`。
 
-## 特征作为函数参数
+## 4. trait 作为参数
 
-使用特征作为函数参数：
+使用 trait 作为函数参数：
 
 ```rust
 pub fn notify(item: &impl Summary) {
@@ -193,9 +201,9 @@ pub fn notify(item: &impl Summary) {
 
 可以使用任何实现了 `Summary` 特征的类型作为该函数的参数，同时在函数体内可以调用该特征的方法，例如 `summarize` 方法。
 
-## 特征约束
+## 5. trait 约束
 
-虽然 `impl Trait` 这种语法非常好理解，其实它只是一个语法糖：
+`impl Trait` 这种语法非常直观，其实它是一种较长形式语法的语法糖。称为 trait 约束：
 
 ```rust
 pub fn notify<T: Summary>(item: &T) {
@@ -203,7 +211,7 @@ pub fn notify<T: Summary>(item: &T) {
 }
 ```
 
-完整形式如上，`T: Summary` 被称为**特征约束**。
+完整形式如上，`T: Summary` 被称为**trait 约束**。
 
 在简单场景 `impl Trait` 就足够使用，但是对于复杂的场景，特征约束更灵活，语法表现能力更强，例如一个函数接受两个 `impl Summary` 的参数：
 
@@ -219,23 +227,23 @@ pub fn notify<T: Summary>(item1: &T, item2: &T) {}
 
 泛型类型 `T` 说明 `item1` 和 `item2` 类型必须相同，`T: Summary` 说明 `T` 必须实现 `Summary` 特征。
 
-### 多重约束
+### 5.1. 多重约束
 
-- 要求参数实现多个特征的语法糖形式
+- 要求参数实现多个 trait 的语法糖形式
 
 ```rust
 pub fn notify(item: &(impl Summary + Display)) {}
 ```
 
-- 特征约束形式
+- trait 约束形式
 
 ```rust
 pub fn notify<T: Summary + Display>(item: &T) {}
 ```
 
-### where 约束
+### 5.2. where 简化约束
 
-当特征约束变多，函数的签名将变得很复杂：
+当 trait 约束变多，函数的签名将变得很复杂：
 
 ```rust
 fn some_function<T: Display + Clone, U: Clone + Debug>(t: &T, u: &U) -> i32 {}
@@ -250,7 +258,7 @@ fn some_function<T, U>(t: &T, u: &U) -> i32
 {}
 ```
 
-### 实现特定特征约束的方法
+### 5.3. 实现特定 trait 约束的方法
 
 特征约束，可以在指定类型 + 指定特征的条件下去实现方法，例如：
 
@@ -299,7 +307,7 @@ impl<T: Display> ToString for T {
 let s = 3.to_string();
 ```
 
-## 返回 impl trait
+## 6. 返回 impl trait
 
 可以通过 `impl Trait` 来说明一个函数返回了一个类型，该类型实现了某个特征：
 
@@ -353,7 +361,7 @@ expected struct `Post`, found struct `Weibo`
 
 报错提示我们 if 和 else 返回了不同的类型。如果想要实现返回不同的类型，需要使用特征对象。
 
-## 修复 largest 函数
+## 7. 修复 largest 函数
 
 以下函数编译报错：
 
@@ -435,7 +443,7 @@ fn main() {
 
 另一种 `largest` 的实现方式是返回在 list 中 `T` 值的引用。如果我们将函数返回值从 `T` 改为 `&T` 并改变函数体使其能够返回一个引用，我们将不需要任何 `Clone` 或 `Copy` 的特征约束而且也不会有任何的堆分配。
 
-## 通过 derive 派生特征
+## 8. 通过 derive 派生 trait
 
 `#[derive(Debug)]` 已经出现过很多次，这种是一种特征派生语法，被 `derive` 标记的对象会自动实现对应的默认特征代码，继承相应的功能。
 
@@ -445,9 +453,9 @@ fn main() {
 
 总之， `derive` 派生出来的是 Rust 默认给我们提供的特征，在开发过程中极大的简化了自己手动实现相应特征的需求，当然，如果你有特殊的需求，还可以自己手动重载该实现。
 
-## 更多示例
+## 9. 更多示例
 
-### 自定义 + 操作
+### 9.1. 自定义 + 操作
 
 在 Rust 中除了数值类型，`String` 也可以做加法，因为 Rust 为 `String` 实现了 `std::ops::Add` 特征，同理，如果我们为自定义类型实现了该特征，那就可以自己实现 `Point1 + Point2` 的操作:
 
@@ -487,7 +495,7 @@ fn main() {
 }
 ```
 
-### 自定义输出
+### 9.2. 自定义输出
 
 在开发过程中，往往只要使用 `#[derive(Debug)]` 对自定义类型进行标注，即可打印输出：
 

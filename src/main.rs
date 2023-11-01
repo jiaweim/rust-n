@@ -1,22 +1,17 @@
 fn main() {
-    println!("Success!");
+    let string1 = String::from("long string is long");
+    {
+        let string2 = String::from("xyz");
+        let result = longest(string1.as_str(), string2.as_str());
+        println!("The longest string is {}", result);
+    }
 }
 
-fn get_option(tp: u8) -> Option<i32> {
-    match tp {
-        1 => {
-            // TODO
-        }
-        _ => {
-            // TODO
-        }
-    };
-
-    // 这里与其返回一个 None，不如使用发散函数替代
-    never_return_fn()
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
 }
 
-// 使用三种方法实现以下发散函数
-fn never_return_fn() -> ! {
-    unimplemented!();
-}
