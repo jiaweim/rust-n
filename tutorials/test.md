@@ -1,26 +1,26 @@
 # 编写测试和控制执行
 
 - [编写测试和控制执行](#编写测试和控制执行)
-  - [简介](#简介)
-  - [测试函数](#测试函数)
-  - [自定义失败信息](#自定义失败信息)
-  - [测试 panic](#测试-panic)
-  - [使用 Result](#使用-result)
-  - [使用 -- 分割命令行参数](#使用----分割命令行参数)
-  - [测试函数中的 println!](#测试函数中的-println)
-  - [运行部分测试](#运行部分测试)
-    - [运行单个测试](#运行单个测试)
-    - [指定名称的一部分过滤测试](#指定名称的一部分过滤测试)
-    - [通过模块名称过滤测试](#通过模块名称过滤测试)
-    - [忽略测试](#忽略测试)
-    - [组合过滤](#组合过滤)
-  - [dev-dependencies](#dev-dependencies)
+  - [1. 简介](#1-简介)
+  - [2. 测试函数](#2-测试函数)
+  - [3. 自定义失败信息](#3-自定义失败信息)
+  - [4. 测试 panic](#4-测试-panic)
+  - [5. 使用 Result](#5-使用-result)
+  - [6. 使用 `--` 分割命令行参数](#6-使用----分割命令行参数)
+  - [7. 测试函数中的 println!](#7-测试函数中的-println)
+  - [8. 运行部分测试](#8-运行部分测试)
+    - [8.1. 运行单个测试](#81-运行单个测试)
+    - [8.2. 指定名称的一部分过滤测试](#82-指定名称的一部分过滤测试)
+    - [8.3. 通过模块名称过滤测试](#83-通过模块名称过滤测试)
+    - [8.4. 忽略测试](#84-忽略测试)
+    - [8.5. 组合过滤](#85-组合过滤)
+  - [9. dev-dependencies](#9-dev-dependencies)
 
 Last updated: 2023-10-17, 09:48
 @author Jiawei Mao
 ****
 
-## 简介
+## 1. 简介
 
 测试函数一般执行三种行为：
 
@@ -28,7 +28,7 @@ Last updated: 2023-10-17, 09:48
 2. 运行想要测试的代码
 3. 判断返回的结果是否符合预期
 
-## 测试函数
+## 2. 测试函数
 
 当使用 Cargo 创建 `lib` 类型的包时，会自动创建一个测试模块。此时 `lib.rs` 的内容如下：
 
@@ -57,7 +57,9 @@ mod tests {
 
 使用 `cargo test` 运行项目中的所有测试。
 
-## 自定义失败信息
+## 3. 自定义失败信息
+
+`assert!`, `assert_eq!` 和 `assert_ne!` 宏传递一个可选的失败信息参数，在测试失败时会将自定义失败信息一起打印出来。
 
 ```rust
 pub fn greeting(name: &str) -> String {
@@ -82,7 +84,7 @@ mod tests {
 }
 ```
 
-## 测试 panic
+## 4. 测试 panic
 
 - 使用 `should_panic` 属性测试函数是否会 panic
 
@@ -112,7 +114,7 @@ mod tests {
 }
 ```
 
-- 使用 expected 参数指定 panic 类型
+- 使用 `expected` 参数指定 panic 信息
 
 `expected` 字符串与 panic 内容不需要完全相同，只需要是后者的前缀即可。
 
@@ -150,17 +152,41 @@ mod tests {
 }
 ```
 
-## 使用 Result
+## 5. 使用 Result
 
+使用 `Result<T, E>` 重写 `it_works()` 测试，在失败时返回 `Err` 而非 panic：
 
-## 使用 -- 分割命令行参数
+```rust
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() -> Result<(), String> {
+        if 2 + 2 == 4 {
+            Ok(())
+        } else {
+            Err(String::from("two plus two does not equal four"))
+        }
+    }
+}
+```
+
+`it_works` 函数的返回值类型为 `Result<(), String>`，与 `assert_eq!` 宏不同，该测试在成功时返回 `Ok(())`，测试失败时返回带 `String` 的 `Err`。
+
+对使用 `Result<T, E>` 的测试不能使用 `#[should_panic]` 注解。为了断言一个操作返回 Err，不要对 `Result<T, E>` 使用 ? 表达式，而是使用 `assert!(value.is_err())`。
+
+## 6. 使用 `--` 分割命令行参数
 
 `cargo build` 可以将代码编译成一个可执行文件，那么 `cargo run` 和 `cargo test` 是如何运行的吗？其实道理都一样，这两个也是将代码编译成可执行文件，然后进行运行，唯一的区别就在于这个可执行文件随后会被删除。
 
-`cargo test` 可以通过命令行参数控制测试的执行，例如你可以通过参数来让默认的多线程测试变成单线程测试。需要注意的是命令行参数有两种，这两种参数使用 -- 分割：
+`cargo test` 在测试模式下编译代码并运行生成的二进制文件：
 
-1. 提供给 `cargo test` 命令本身的，这些参数在 `--` 之前指定
-2. 提供给编译后的可执行文件的参数，在 `--` 之后指定
+- `cargo test` 生成的二进制文件默认并发运行所有测试
+- 截获测试过程中产生的输出，阻止它们显示
+
+可以将一部分命令行参数传递给 `cargo test`，而将另一部分传递给生成的测试二进制文件。这两种参数使用 `--` 分割：
+
+1. 提供给 `cargo test` 的参数在 `--` 前面
+2. 提供给编译后的可执行文件的参数在 `--` 后面
 
 可以使用 `cargo test --help` 查看第一种参数的帮助列表；使用 `cargo test -- --help` 查看第二种参数的帮助列表。
 
@@ -170,15 +196,15 @@ mod tests {
 $ cargo test -- --test-threads=1
 ```
 
-## 测试函数中的 println!
+## 7. 测试函数中的 println!
 
-默认情况下，如果测试通过，写入标准输出的内容不会显示在测试结果中。如果想看所有的输出，使用命令：
+默认情况下，如果测试通过，写入标准输出的内容不会在测试结果中显示。如果想看所有的输出，使用命令：
 
 ```sh
 $ cargo test -- --show-output
 ```
 
-## 运行部分测试
+## 8. 运行部分测试
 
 ```rust
 pub fn add_two(a: i32) -> i32 {
@@ -206,7 +232,7 @@ mod tests {
 }
 ```
 
-### 运行单个测试
+### 8.1. 运行单个测试
 
 指定测试函数名作为参数：
 
@@ -214,7 +240,7 @@ mod tests {
 $ cargo test one_hundred
 ```
 
-### 指定名称的一部分过滤测试
+### 8.2. 指定名称的一部分过滤测试
 
 ```sh
 $ cargo test add
@@ -227,7 +253,7 @@ test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out;
 finished in 0.00s
 ```
 
-这里运行了以 `add` 开头的所有测试。
+这里运行了带 `add` 的所有测试。
 
 - 不仅可以使用前缀，还能使用名称中间部分过滤测试
 
@@ -242,7 +268,7 @@ test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out;
 finished in 0.00s
 ```
 
-### 通过模块名称过滤测试
+### 8.3. 通过模块名称过滤测试
 
 ```sh
 $ cargo test tests
@@ -256,7 +282,7 @@ test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out;
 finished in 0.00s
 ```
 
-### 忽略测试
+### 8.4. 忽略测试
 
 通过 `ignore` 属性忽略特定测试：
 
@@ -273,7 +299,7 @@ fn expensive_test() {
 }
 ```
 
-这里用 `#[ignore]` 对 expensive_test 函数进行了标注，看看结果：
+这里用 `#[ignore]` 对 `expensive_test` 函数进行了标注，看看结果：
 
 ```sh
 $ cargo test
@@ -293,7 +319,7 @@ finished in 0.00s
 
 输出中的 `test expensive_test ... ignored` 表示该测试函数被忽略了，没有被执行。
 
-- 通过以下方式可以**仅运行**被忽略的测试函数
+- 使用 `cargo test -- --ignored` **仅运行**被忽略的测试
 
 ```sh
 $ cargo test -- --ignored
@@ -311,7 +337,7 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out;
 finished in 0.00s
 ```
 
-### 组合过滤
+### 8.5. 组合过滤
 
 组合上面介绍的过滤方式，更加强大。以如下代码为例：
 
@@ -362,7 +388,7 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out;
 finished in 0.00s
 ```
 
-## dev-dependencies
+## 9. dev-dependencies
 
 `[dev-dependencies]` 用于引入只在测试场景使用的外部依赖。
 
@@ -390,6 +416,5 @@ mod tests {
 
     #[test]
     fn test_add() {
-        assert_eq!(add(2, 3), 5);
-    
+        assert_eq!(add(2, 3), 5); 
 ```

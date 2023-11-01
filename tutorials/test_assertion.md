@@ -1,28 +1,28 @@
 # 断言
 
 - [断言](#断言)
-  - [简介](#简介)
-  - [常见断言](#常见断言)
-  - [assert\_eq!](#assert_eq)
-  - [assert\_ne!](#assert_ne)
-  - [assert!](#assert)
-  - [debug\_assert! 系列](#debug_assert-系列)
+  - [1. 简介](#1-简介)
+  - [2. 常见断言](#2-常见断言)
+  - [3. assert\_eq!](#3-assert_eq)
+  - [4. assert\_ne!](#4-assert_ne)
+  - [5. assert!](#5-assert)
+  - [6. debug\_assert! 系列](#6-debug_assert-系列)
 
 Last updated: 2023-10-17, 11:02
 @author Jiawei Mao
 ****
 
-## 简介
+## 1. 简介
 
 断言决定了测试是通过还是失败，前面已经见识过 `assert_eq!` 的使用。
 
-## 常见断言
+## 2. 常见断言
 
 在所有模式都运行的断言：`assert!`, `assert_eq!`, `assert_ne!`。
 
 只在 Debug 模式运行的断言：`debug_assert!`, `debug_assert_eq!`, `debug_assert_ne!`
 
-## assert_eq!
+## 3. assert_eq!
 
 `assert_eq!` 宏用于判断两个表达式返回的值是否相等 :
 
@@ -64,7 +64,7 @@ note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 !!! attention
     以上特征限制对 `assert_ne!` 一样有效
 
-## assert_ne!
+## 4. assert_ne!
 
 `assert_ne!` 在使用和限制上与 `assert_eq!` 并无区别，唯一的区别就在于，前者判断的是两者的不相等性。
 
@@ -78,7 +78,7 @@ fn main() {
 
 由于 a 和 b 不相等，因此 `assert_ne!` 会顺利通过，不再报错。
 
-## assert!
+## 5. assert!
 
 `assert!` 用于判断传入的布尔表达式是否为 true :
 
@@ -130,7 +130,7 @@ mod tests {
 }
 ```
 
-## debug_assert! 系列
+## 6. debug_assert! 系列
 
 `debug_assert!`, `debug_assert_eq!`, `debug_assert_ne!` 这三个在功能上与之前讲解的版本并无区别，主要区别在于，`debug_assert!` 系列只能在 Debug 模式下输出，例如如下代码：
 
