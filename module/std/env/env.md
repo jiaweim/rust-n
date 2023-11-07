@@ -1,5 +1,10 @@
 # std::env
 
+- [std::env](#stdenv)
+  - [简介](#简介)
+  - [函数](#函数)
+
+
 ## 简介
 
 该模块用于检查和操作进程的环境。
@@ -10,29 +15,4 @@
 
 
 ## 函数
-
-### args
-
-```rust
-pub fn args() -> Args
-```
-
-返回程序启动的参数（通常通过命令行传递）。
-
-第一个参数一般是可执行文件的路径，但它可以设置为任意文本，因此出于安全目的不应依赖该属性。
-
-在 Unix 系统上，shell 常使用 glob 模式（如 `*` 和 `?`）展开未加引号的参数。在 Windows 上则不会展开，直接原样传递参数。
-
-**Panics**
-
-**示例**
-
-```rust
-use std::env;
-
-// Prints each argument on a separate line
-for argument in env::args() {
-    println!("{argument}");
-}
-```
 

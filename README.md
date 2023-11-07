@@ -43,6 +43,7 @@
   - [单元测试](./tutorials/test_unit.md)
   - [集成测试](./tutorials/test_integrate.md)
   - [断言](./tutorials/test_assertion.md)
+- [命令行解析 clap](https://docs.rs/clap/latest/clap/)
 
 ## 参考
 

@@ -34,7 +34,7 @@ Rust 将错误分为两类：
 
 `panic!` 用于处理不可恢复错误。触发 panic 的方式有两种：
 
-- 被动：执行会造成 panic 的代码（比如访问越界访问数组）
+- 被动：执行会造成 panic 的代码（比如越界访问数组）
 - 主动：显式调用 `panic!` 宏
 
 `panic` 通常会打印一个错误消息，展开并清理栈数据，然后退出。
@@ -153,9 +153,7 @@ fn main() {
     let f = File::open("hello.txt");
     let f = match f {
         Ok(file) => file,
-        Err(error) => {
-            panic!("Problem opening the file: {:?}", error)
-        },
+        Err(error) => panic!("Problem opening the file: {:?}", error),
     };
 }
 ```
