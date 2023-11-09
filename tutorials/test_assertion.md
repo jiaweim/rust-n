@@ -158,4 +158,4 @@ note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 $ cargo run --release
 ```
 
-若一些断言检查会影响发布版本的性能时，大家可以使用 debug_assert! 来避免这种情况的发生。
+若一些断言检查会影响发布版本的性能，那么可以使用 `debug_assert!` 来避免。debug 断言在编译 release 版本时被跳过。

@@ -11,7 +11,7 @@ Last updated: 2023-10-17, 11:27
 
 ## 1. 字符类型
 
-`char` 表示字符类型。示例：
+`char` 表示字符类型，占 4 字节 32 位。示例：
 
 ```rust
 fn main() {
@@ -36,7 +36,13 @@ $ cargo run
 字符'中'占用了4字节的内存大小
 ```
 
-Unicode 标量值范围为：[U+0000, U+D7FF] 和 [U+E000, U+10FFFF]。
+Unicode 标量值范围为：[U+0000, U+D7FF] 和 [U+E000, U+10FFFF]
+
+- 如果字符编码在 U+0000 到 U+007F 之间，即 ASCII 字符集内，就可以把字符写为 '\xHH'，其中 HH 是两个十六进制数。例如，字符字面量 '*' 和 '\x2A' 是等效的，因为字符 `*` 的编码是 42 或十六进制 2A。
+- 任何 Unicode 字符可以写成 '\u{HHHHHH}'，其中 HHHHHH 最多 6 个十六进制数，可以用下划线分组。
+
+!!! info
+    Rust 对单独的字符使用 char 类型，但对字符串使用 UTF-8 编码。因此，String 将其文本表示为 UTF-8 字节序列，而不是字符数组。
 
 ## 2. Boolean 类型
 
@@ -48,6 +54,13 @@ fn main() {
 
     let f: bool = false; // with explicit type annotation
 }
+```
+
+将 bool 值转换为整数：
+
+```rust
+assert_eq!(false as i32, 0);
+assert_eq!(true as i32, 1);
 ```
 
 ## 3. 单元类型

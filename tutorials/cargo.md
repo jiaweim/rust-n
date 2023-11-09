@@ -1,6 +1,7 @@
 # Cargo
 
 - [Cargo](#cargo)
+  - [简介](#简介)
   - [构建运行](#构建运行)
   - [构建发布](#构建发布)
   - [包软件](#包软件)
@@ -8,10 +9,19 @@
   - [配置 crates.io 镜像](#配置-cratesio-镜像)
     - [新增镜像地址](#新增镜像地址)
     - [覆盖默认镜像](#覆盖默认镜像)
+  - [依赖项](#依赖项)
 
 Last updated: 2023-10-16, 13:05
 @author Jiawei Mao
 ****
+
+## 简介
+
+概要：
+
+- cargo 是 rust 的编译管理器、包管理器和通用工具。
+- rustc 是 Rust 编译器，通常不需要直接调用，而通过 cargo 间接调用。
+- rustdoc 是 Rust 文档工具。
 
 ## 构建运行
 
@@ -19,6 +29,20 @@ Last updated: 2023-10-16, 13:05
 - `cargo build`：构建项目
 - `cargo run`：构建并运行项目
 - `cargo check`：检查是否能够编译
+
+**不设置 git**
+
+```sh
+cargo new hello --vcs none
+```
+
+**构建并运行项目**
+
+```sh
+cargo run
+```
+
+Cargo 先调用编译器 rustc，然后运行它生成的可执行文件。Cargo 将可执行文件放在 `target` 目录中。
 
 ## 构建发布
 
@@ -110,4 +134,42 @@ registry = "git://mirrors.ustc.edu.cn/crates.io-index"
 ```
 
 这里创建了一个新的镜像源 `[source.ustc]`，然后将默认的 crates.io 替换为新的镜像源 `replace-with = 'ustc'`。
+
+## 依赖项
+
+在 Cargo.toml 中，支持三种依赖项：
+
+- 基于 Rust 官方仓库 crates.io，通过版本说明来描述
+- 基于项目源代码的 git 仓库地址，通过 URL 来描述
+- 基于本地项目的绝对路径或者相对路径，通过类 Unix 模式的路径来描述
+
+三种形式：
+
+```toml
+[dependencies]
+rand = "0.3"
+hammer = { version = "0.5.0"}
+color = { git = "https://github.com/bjz/color-rs" }
+geometry = { path = "crates/geometry" }
+```
+
+**crates.io 语法**
+
+```rust
+[dependencies]
+time = "0.1.12"
+```
+
+^ 指定版本：
+
+```
+^1.2.3  :=  >=1.2.3, <2.0.0
+^1.2    :=  >=1.2.0, <2.0.0
+^1      :=  >=1.0.0, <2.0.0
+^0.2.3  :=  >=0.2.3, <0.3.0
+^0.2    :=  >=0.2.0, <0.3.0
+^0.0.3  :=  >=0.0.3, <0.0.4
+^0.0    :=  >=0.0.0, <0.1.0
+^0      :=  >=0.0.0, <1.0.0
+```
 

@@ -13,3 +13,4 @@
 
 CXX-Qt
 
+egui 或 Tauri
