@@ -14,3 +14,8 @@
 CXX-Qt
 
 egui 或 Tauri
+
+Chart 库：
+
+- plotly，更多图标类型，更容易学习
+- Vegalite，高度可定制，更快，支持交互

@@ -1,4 +1,8 @@
 mod type_test;
+mod ownership_demo;
+mod iterator_demo;
+mod into_from;
+mod concurrency_demo;
 
 pub fn add_two(a: i32) -> i32 {
     a + 2
@@ -112,5 +116,37 @@ pub struct Tweet {
 impl Summary for Tweet {
     fn summarize(&self) -> String {
         format!("{}: {}", self.username, self.content)
+    }
+}
+
+#[cfg(test)]
+mod drop_demo {
+    struct Appellation {
+        name: String,
+        nicknames: Vec<String>,
+    }
+
+    impl Drop for Appellation {
+        fn drop(&mut self) {
+            print!("Dropping {}", self.name);
+            if !self.nicknames.is_empty() {
+                print!(" (AKA {})", self.nicknames.join(", "));
+            }
+            println!();
+        }
+    }
+
+    #[test]
+    fn drop_test() {
+        let mut a = Appellation {
+            name: "Zeus".to_string(),
+            nicknames: vec!["cloud collector".to_string(), "king of the gods".to_string()],
+        };
+        println!("before assignment");
+        a = Appellation {
+            name: "Hera".to_string(),
+            nicknames: vec![],
+        };
+        println!("at end of block");
     }
 }

@@ -9,4 +9,4 @@ edition = "2021"
 #  fast conversion of integer primitives to decimal strings
 itoa = "1.0.9"
 log = "0.4.20"
-
+rayon="1.5"
