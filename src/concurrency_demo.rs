@@ -30,13 +30,5 @@ mod rayon_demo {
             = "Great Teacher Onizuka".chars().partition(|&c| c.is_uppercase());
         assert_eq!(upper, "GTO");
         assert_eq!(lower, "reat eacher nizuka");
-
-        let params = glium::DrawParameters {
-            line_width: Some(0.02),
-            point_size: Some(0.02),
-            ..Default::default()
-        };
-
-        target.draw(..., &params).unwrap();
     }
 }
